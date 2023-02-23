@@ -471,18 +471,23 @@ public abstract class ChessGamePiece{
             String moveLog = this.toString() + " -> ";
             board.clearCell( pieceRow, pieceColumn );
             if ( isEnemy( board, row, col ) ){
-                ChessGraveyard graveyard;
-                ChessGameEngine gameEngine =
-                    ( (ChessPanel)board.getParent() ).getGameEngine();
-                if ( gameEngine.getCurrentPlayer() == 1 ){
-                    graveyard =
-                        ( (ChessPanel)board.getParent() ).getGraveyard( 2 );
-                }
-                else
-                {
-                    graveyard =
-                        ( (ChessPanel)board.getParent() ).getGraveyard( 1 );
-                }
+                
+                ChessGraveyard graveyard = getChessGraveyard(board);
+//                 ChessGraveyard graveyard;
+//                 ChessGameEngine gameEngine =
+//                     ( (ChessPanel)board.getParent() ).getGameEngine();
+//                 if ( gameEngine.getCurrentPlayer() == 1 ){
+//                     graveyard =
+//                         ( (ChessPanel)board.getParent() ).getGraveyard( 2 );
+//                 }
+//                 else
+//                 {
+//                     graveyard =
+//                         ( (ChessPanel)board.getParent() ).getGraveyard( 1 );
+//                 }
+                
+                
+                
                 graveyard.addPiece(
                     board.getCell( row, col ).getPieceOnSquare() );
             }
@@ -499,6 +504,29 @@ public abstract class ChessGamePiece{
         {
             return false;
         }
+    }
+    
+    // Aplicando SINGLETON
+    
+    public class ChessGraveyard {
+        private static ChessGraveyard instance = null;
+    
+         // Constructor privado para evitar la creación de instancias fuera de esta clase
+         private ChessGraveyard() {}
+    
+        // Método para obtener la instancia singleton de ChessGraveyard
+         public static ChessGraveyard getInstance() {
+            if (instance == null) {
+                instance = new ChessGraveyard();
+            }
+             return instance;
+      }
+    
+    }
+    
+    private ChessGraveyard getChessGraveyard(ChessGameBoard board) {
+        ChessGraveyard graveyard = ChessGraveyard.getInstance();
+        return graveyard;
     }
     /**
      * Determines if this piece can move to the specified row and column. Also
