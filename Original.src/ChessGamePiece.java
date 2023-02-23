@@ -55,7 +55,7 @@ public abstract class ChessGamePiece{
      * @param pieceColor
      *            either GamePiece.WHITE, BLACK, or UNASSIGNED
      */
-    public ChessGamePiece(
+    protected ChessGamePiece(
         ChessGameBoard board,
         int row,
         int col,
@@ -87,7 +87,7 @@ public abstract class ChessGamePiece{
      * @param pieceColor
      *            either GamePiece.BLACK, WHITE, or UNASSIGNED
      */
-    public ChessGamePiece(
+    protected ChessGamePiece(
         ChessGameBoard board,
         int row,
         int col,
@@ -268,18 +268,18 @@ public abstract class ChessGamePiece{
         ChessGameBoard board,
         int numMoves ){
         ArrayList<String> moves = new ArrayList<String>();
-        int count = 0;
+        Moves nwMoves = new Moves();
         if ( isPieceOnScreen() ){
-            for ( int i = 1; i < 8 && count < numMoves; i++ ){
+            for ( int i = 1; i < 8 && nwMoves.getCount() < numMoves; i++ ){
                 if ( isOnScreen( pieceRow - i, pieceColumn - i )
                     && ( board.getCell( pieceRow - i,
                         pieceColumn - i ).getPieceOnSquare() == null ) ){
+                    nwMoves.addMove();
                     moves.add( ( pieceRow - i ) + "," + ( pieceColumn - i ) );
-                    count++;
                 }
                 else if ( isEnemy( board, pieceRow - i, pieceColumn - i ) ){
+                    nwMoves.addMove();
                     moves.add( ( pieceRow - i ) + "," + ( pieceColumn - i ) );
-                    count++;
                     break;
                 }
                 else
@@ -305,18 +305,18 @@ public abstract class ChessGamePiece{
         ChessGameBoard board,
         int numMoves ){
         ArrayList<String> moves = new ArrayList<String>();
-        int count = 0;
+        Moves neMoves = new Moves();
         if ( isPieceOnScreen() ){
-            for ( int i = 1; i < 8 && count < numMoves; i++ ){
+            for ( int i = 1; i < 8 && neMoves.getCount() < numMoves; i++ ){
                 if ( isOnScreen( pieceRow - i, pieceColumn + i )
                     && ( board.getCell( pieceRow - i,
                         pieceColumn + i).getPieceOnSquare() == null ) ){
+                    neMoves.addMove();
                     moves.add( ( pieceRow - i ) + "," + ( pieceColumn + i ) );
-                    count++;
                 }
                 else if ( isEnemy( board, pieceRow - i, pieceColumn + i ) ){
+                    neMoves.addMove();
                     moves.add( ( pieceRow - i ) + "," + ( pieceColumn + i ) );
-                    count++;
                     break;
                 }
                 else
@@ -342,18 +342,18 @@ public abstract class ChessGamePiece{
         ChessGameBoard board,
         int numMoves ){
         ArrayList<String> moves = new ArrayList<String>();
-        int count = 0;
+        Moves swMoves = new Moves();
         if ( isPieceOnScreen() ){
-            for ( int i = 1; i < 8 && count < numMoves; i++ ){
+            for ( int i = 1; i < 8 && swMoves.getCount() < numMoves; i++ ){
                 if ( isOnScreen( pieceRow + i, pieceColumn - i )
                     && ( board.getCell( pieceRow + i,
                         pieceColumn - i ).getPieceOnSquare() == null ) ){
+                    swMoves.addMove();
                     moves.add( ( pieceRow + i ) + "," + ( pieceColumn - i ) );
-                    count++;
                 }
                 else if ( isEnemy( board, pieceRow + i, pieceColumn - i ) ){
+                    swMoves.addMove();
                     moves.add( ( pieceRow + i ) + "," + ( pieceColumn - i ) );
-                    count++;
                     break;
                 }
                 else
@@ -379,18 +379,18 @@ public abstract class ChessGamePiece{
         ChessGameBoard board,
         int numMoves ){
         ArrayList<String> moves = new ArrayList<String>();
-        int count = 0;
+        Moves seMoves = new Moves();
         if ( isPieceOnScreen() ){
-            for ( int i = 1; i < 8 && count < numMoves; i++ ){
+            for ( int i = 1; i < 8 && seMoves.getCount() < numMoves; i++ ){
                 if ( isOnScreen( pieceRow + i, pieceColumn + i )
                     && ( board.getCell( pieceRow + i,
                         pieceColumn + i ).getPieceOnSquare() == null ) ){
+                    seMoves.addMove();
                     moves.add( ( pieceRow + i ) + "," + ( pieceColumn + i ) );
-                    count++;
                 }
                 else if ( isEnemy( board, pieceRow + i, pieceColumn + i ) ){
+                    seMoves.addMove();
                     moves.add( ( pieceRow + i ) + "," + ( pieceColumn + i ) );
-                    count++;
                     break;
                 }
                 else
@@ -735,4 +735,17 @@ public abstract class ChessGamePiece{
         return this.getClass().toString().substring( 6 ) + " @ (" + pieceRow
             + ", " + pieceColumn + ")";
     }
+
+    public class Moves {
+        private int count = 0;
+        
+        public void addMove() {
+            count++;
+        }
+        
+        public int getCount() {
+            return count;
+        }
+    }
 }
+
