@@ -1,6 +1,7 @@
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
-public class King
+
+public class King 
     extends ChessGamePiece{
     // ----------------------------------------------------------
     /**
@@ -78,7 +79,7 @@ public class King
         {
             return new ImageIcon(
                 getClass().getResource("chessImages/default-Unassigned.gif" )
-            );            
+            );         
         }
     }
 }

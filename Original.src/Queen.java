@@ -1,5 +1,6 @@
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
+
 public class Queen
     extends ChessGamePiece{
     // ----------------------------------------------------------

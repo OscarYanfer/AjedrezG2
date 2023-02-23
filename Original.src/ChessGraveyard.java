@@ -1,3 +1,4 @@
+/*PATRÓN SINGLETON */
 import java.awt.GridLayout;
 import javax.swing.*;
 // -------------------------------------------------------------------------
@@ -11,6 +12,7 @@ import javax.swing.*;
  */
 public class ChessGraveyard
     extends JPanel{
+    private static ChessGraveyard instance = null;
     private String title;
     // ----------------------------------------------------------
     /**
@@ -23,6 +25,13 @@ public class ChessGraveyard
         this.title = title;
         this.add( new JLabel( title ) );
         this.setLayout( new GridLayout( 8, 0 ) );
+    }
+
+    public static ChessGraveyard getInstance(String title) {
+        if (instance == null) {
+            instance = new ChessGraveyard(title);
+        }
+        return instance;
     }
     // ----------------------------------------------------------
     /**
