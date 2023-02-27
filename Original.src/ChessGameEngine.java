@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.List;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import java.awt.event.MouseEvent;
@@ -83,7 +83,7 @@ public class ChessGameEngine{
      * @return boolean true if the player does have legal moves, false otherwise
      */
     public boolean playerHasLegalMoves( int playerNum ){
-        ArrayList<ChessGamePiece> pieces;
+        List<ChessGamePiece> pieces;
         if ( playerNum == 1 ){
             pieces = board.getAllWhitePieces();
         }
@@ -111,21 +111,8 @@ public class ChessGameEngine{
         {
             return false;
         }
-        if ( currentPlayer == 2 ) // black player
-        {
-            if ( currentPiece.getColorOfPiece() == ChessGamePiece.BLACK ){
-                return true;
-            }
-            return false;
-        }
-        else
-        // white player
-        {
-            if ( currentPiece.getColorOfPiece() == ChessGamePiece.WHITE ){
-                return true;
-            }
-            return false;
-        }
+        return (currentPlayer == 2 && currentPiece.getColorOfPiece() == ChessGamePiece.BLACK) || 
+               (currentPlayer != 2 && currentPiece.getColorOfPiece() == ChessGamePiece.WHITE);
     }
     /**
      * Determines if the requested King is in check.
@@ -167,14 +154,9 @@ public class ChessGameEngine{
         else
         {
             board.resetBoard( false );
-            // System.exit(0);
         }
     }
-    /**
-     * Determines if the game should continue (i.e. game is in check or is
-     * 'normal'). If it should not, the user is asked to play again (see above
-     * method).
-     */
+    
     private void checkGameConditions(){
         int origPlayer = currentPlayer;
         for ( int i = 0; i < 2; i++ ){
@@ -245,68 +227,68 @@ public class ChessGameEngine{
         BoardSquare squareClicked = (BoardSquare)e.getSource();
         ChessGamePiece pieceOnSquare = squareClicked.getPieceOnSquare();
         board.clearColorsOnBoard();
-        if ( firstClick ){
-            currentPiece = squareClicked.getPieceOnSquare();
-            if ( selectedPieceIsValid() ){
-                currentPiece.showLegalMoves( board );
-                squareClicked.setBackground( Color.GREEN );
-                firstClick = false;
-            }
-            else
-            {
-                if ( currentPiece != null ){
-                    JOptionPane.showMessageDialog(
-                        squareClicked,
-                        "You tried to pick up the other player's piece! "
-                            + "Get some glasses and pick a valid square.",
-                        "Illegal move",
-                        JOptionPane.ERROR_MESSAGE );
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(
-                        squareClicked,
-                        "You tried to pick up an empty square! "
-                            + "Get some glasses and pick a valid square.",
-                        "Illegal move",
-                        JOptionPane.ERROR_MESSAGE );
-                }
-            }
+        if (firstClick) {
+            handleFirstClick(squareClicked);
+        } else {
+            handleSecondClick(squareClicked, pieceOnSquare);
         }
-        else
-        {
-            if ( pieceOnSquare == null ||
-                !pieceOnSquare.equals( currentPiece ) ) // moving
-            {
-                boolean moveSuccessful =
-                    currentPiece.move(
-                        board,
-                        squareClicked.getRow(),
-                        squareClicked.getColumn() );
-                if ( moveSuccessful ){
-                    checkGameConditions();
-                }
-                else
-                {
-                    int row = squareClicked.getRow();
-                    int col = squareClicked.getColumn();
-                    JOptionPane.showMessageDialog(
-                        squareClicked,
-                        "The move to row " + ( row + 1 ) + " and column "
-                            + ( col + 1 )
-                            + " is either not valid or not legal "
-                            + "for this piece. Choose another move location, "
-                            + "and try using your brain this time!",
-                        "Invalid move",
-                        JOptionPane.ERROR_MESSAGE );
-                }
-                firstClick = true;
-            }
-            else
-            // user is just unselecting the current piece
-            {
-                firstClick = true;
-            }
+    }
+    
+    private void handleFirstClick(BoardSquare squareClicked) {
+        currentPiece = squareClicked.getPieceOnSquare();
+        if (selectedPieceIsValid()) {
+            currentPiece.showLegalMoves(board);
+            squareClicked.setBackground(Color.GREEN);
+            firstClick = false;
+        } else {
+            showIllegalSelectionMessage(squareClicked);
         }
+    }
+    
+    private void handleSecondClick(BoardSquare squareClicked, ChessGamePiece pieceOnSquare) {
+        if (pieceOnSquare == null || !pieceOnSquare.equals(currentPiece)) {
+            boolean moveSuccessful = currentPiece.move(board, squareClicked.getRow(), squareClicked.getColumn());
+            if (moveSuccessful) {
+                checkGameConditions();
+            } else {
+                showInvalidMoveMessage(squareClicked);
+            }
+            firstClick = true;
+        } else {
+            firstClick = true;
+        }
+    }
+
+    
+    private void showIllegalSelectionMessage(BoardSquare squareClicked) {
+        if (currentPiece != null) {
+            JOptionPane.showMessageDialog(
+                squareClicked,
+                "You tried to pick up the other player's piece! "
+                    + "Get some glasses and pick a valid square.",
+                "Illegal move",
+                JOptionPane.ERROR_MESSAGE );
+        } else {
+            JOptionPane.showMessageDialog(
+                squareClicked,
+                "You tried to pick up an empty square! "
+                    + "Get some glasses and pick a valid square.",
+                "Illegal move",
+                JOptionPane.ERROR_MESSAGE );
+        }
+    }
+    
+    private void showInvalidMoveMessage(BoardSquare squareClicked) {
+        int row = squareClicked.getRow();
+        int col = squareClicked.getColumn();
+        JOptionPane.showMessageDialog(
+            squareClicked,
+            "The move to row " + (row + 1) + " and column "
+                + (col + 1)
+                + " is either not valid or not legal "
+                + "for this piece. Choose another move location, "
+                + "and try using your brain this time!",
+            "Invalid move",
+            JOptionPane.ERROR_MESSAGE );
     }
 }
