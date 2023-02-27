@@ -1,6 +1,8 @@
 import javax.swing.ImageIcon;
+
 import java.util.ArrayList;
-// -------------------------------------------------------------------------
+
+
 /**
  * Represents a Rook game piece.
  *

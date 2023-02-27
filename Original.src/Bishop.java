@@ -1,6 +1,7 @@
 import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
-// -------------------------------------------------------------------------
+
 /**
  * Class to represent the Bishop piece.
  * 
