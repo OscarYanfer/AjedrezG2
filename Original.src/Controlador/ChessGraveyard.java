@@ -1,4 +1,4 @@
-/*PATRÓN SINGLETON */
+/*PATRÓN SINGLETON - aplicación */
 import java.awt.GridLayout;
 import javax.swing.*;
 // -------------------------------------------------------------------------
