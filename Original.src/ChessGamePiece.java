@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.ImageIcon;
 // -------------------------------------------------------------------------
 /**
@@ -132,21 +134,17 @@ public abstract class ChessGamePiece implements Serializable{
     protected ArrayList<String> calculateSouthMoves(
         ChessGameBoard board,
         int numMoves ){
-        ArrayList<String> moves = new ArrayList<String>();
+        ArrayList<String> moves = new ArrayList<>();
         int count = 0;
         if ( isPieceOnScreen() ){
-            for ( int i = pieceRow + 1; i < 8 && count < numMoves; i++ ){
-                if ( ( board.getCell( i, pieceColumn ).getPieceOnSquare()
-                    == null || isEnemy( board, i, pieceColumn ) ) ){
+            boolean foundEnemy = false;
+            for ( int i = pieceRow + 1; i < 8 && count < numMoves && !foundEnemy; i++ ){
+                if ( ( board.getCell( i, pieceColumn ).getPieceOnSquare() == null || isEnemy( board, i, pieceColumn ) ) ){
                     moves.add( i + "," + pieceColumn );
                     count++;
                     if ( isEnemy( board, i, pieceColumn ) ){
-                        break;
+                        foundEnemy = true;
                     }
-                }
-                else
-                {
-                    break;
                 }
             }
         }
@@ -166,21 +164,17 @@ public abstract class ChessGamePiece implements Serializable{
     protected ArrayList<String> calculateNorthMoves(
         ChessGameBoard board,
         int numMoves ){
-        ArrayList<String> moves = new ArrayList<String>();
+        ArrayList<String> moves = new ArrayList<>();
         int count = 0;
         if ( isPieceOnScreen() ){
-            for ( int i = pieceRow - 1; i >= 0 && count < numMoves; i-- ){
-                if ( ( board.getCell( i, pieceColumn ).getPieceOnSquare()
-                    == null || isEnemy( board, i, pieceColumn ) ) ){
+            boolean foundEnemy = false;
+            for ( int i = pieceRow - 1; i >= 0 && count < numMoves && !foundEnemy; i-- ){
+                if ( ( board.getCell( i, pieceColumn ).getPieceOnSquare() == null || isEnemy( board, i, pieceColumn ) ) ){
                     moves.add( i + "," + pieceColumn );
                     count++;
                     if ( isEnemy( board, i, pieceColumn ) ){
-                        break;
+                        foundEnemy = true;
                     }
-                }
-                else
-                {
-                    break;
                 }
             }
         }
@@ -200,21 +194,17 @@ public abstract class ChessGamePiece implements Serializable{
     protected ArrayList<String> calculateEastMoves(
         ChessGameBoard board,
         int numMoves ){
-        ArrayList<String> moves = new ArrayList<String>();
+        ArrayList<String> moves = new ArrayList<>();
         int count = 0;
         if ( isPieceOnScreen() ){
-            for ( int i = pieceColumn + 1; i < 8 && count < numMoves; i++ ){
-                if ( ( board.getCell( pieceRow, i ).getPieceOnSquare()
-                    == null || isEnemy( board, pieceRow, i ) ) ){
+            boolean foundEnemy = false;
+            for ( int i = pieceColumn + 1; i < 8 && count < numMoves && !foundEnemy; i++ ){
+                if ( ( board.getCell( pieceRow, i ).getPieceOnSquare() == null || isEnemy( board, pieceRow, i ) ) ){
                     moves.add( pieceRow + "," + i );
                     count++;
                     if ( isEnemy( board, pieceRow, i ) ){
-                        break;
+                        foundEnemy = true;
                     }
-                }
-                else
-                {
-                    break;
                 }
             }
         }
@@ -234,21 +224,17 @@ public abstract class ChessGamePiece implements Serializable{
     protected ArrayList<String> calculateWestMoves(
         ChessGameBoard board,
         int numMoves ){
-        ArrayList<String> moves = new ArrayList<String>();
+        ArrayList<String> moves = new ArrayList<>();
         int count = 0;
         if ( isPieceOnScreen() ){
-            for ( int i = pieceColumn - 1; i >= 0 && count < numMoves; i-- ){
-                if ( ( board.getCell(pieceRow, i ).getPieceOnSquare()
-                    == null || isEnemy( board, pieceRow, i ) ) ){
+            boolean foundEnemy = false;
+            for ( int i = pieceColumn - 1; i >= 0 && count < numMoves && !foundEnemy; i-- ){
+                if ( ( board.getCell(pieceRow, i ).getPieceOnSquare() == null || isEnemy( board, pieceRow, i ) ) ){
                     moves.add( pieceRow + "," + i );
                     count++;
                     if ( isEnemy( board, pieceRow, i ) ){
-                        break;
+                        foundEnemy = true;
                     }
-                }
-                else
-                {
-                    break;
                 }
             }
         }
@@ -268,25 +254,23 @@ public abstract class ChessGamePiece implements Serializable{
     protected ArrayList<String> calculateNorthWestMoves(
         ChessGameBoard board,
         int numMoves ){
-        ArrayList<String> moves = new ArrayList<String>();
+        ArrayList<String> moves = new ArrayList<>();
         Moves nwMoves = new Moves();
         if ( isPieceOnScreen() ){
-            for ( int i = 1; i < 8 && nwMoves.getCount() < numMoves; i++ ){
+            boolean foundEnemy = false;
+            for ( int i = 1; i < 8 && nwMoves.getCount() < numMoves && !foundEnemy; i++ ){
                 if ( isOnScreen( pieceRow - i, pieceColumn - i )
-                    && ( board.getCell( pieceRow - i,
-                        pieceColumn - i ).getPieceOnSquare() == null ) ){
-                    nwMoves.addMove();
+                    && ( board.getCell( pieceRow - i, pieceColumn - i ).getPieceOnSquare() == null ) ){
                     moves.add( ( pieceRow - i ) + "," + ( pieceColumn - i ) );
                 }
                 else if ( isEnemy( board, pieceRow - i, pieceColumn - i ) ){
-                    nwMoves.addMove();
                     moves.add( ( pieceRow - i ) + "," + ( pieceColumn - i ) );
+                    foundEnemy = true;
+                }
+                else {
                     break;
                 }
-                else
-                {
-                    break;
-                }
+                nwMoves.addMove();
             }
         }
         return moves;
@@ -305,23 +289,22 @@ public abstract class ChessGamePiece implements Serializable{
     protected ArrayList<String> calculateNorthEastMoves(
         ChessGameBoard board,
         int numMoves ){
-        ArrayList<String> moves = new ArrayList<String>();
+        ArrayList<String> moves = new ArrayList<>();
         Moves neMoves = new Moves();
         if ( isPieceOnScreen() ){
-            for ( int i = 1; i < 8 && neMoves.getCount() < numMoves; i++ ){
-                if ( isOnScreen( pieceRow - i, pieceColumn + i )
-                    && ( board.getCell( pieceRow - i,
-                        pieceColumn + i).getPieceOnSquare() == null ) ){
-                    neMoves.addMove();
-                    moves.add( ( pieceRow - i ) + "," + ( pieceColumn + i ) );
+            for (int i = 1; i < 8 && neMoves.getCount() < numMoves; i++) {
+                boolean foundEnemy = false;
+                if (isOnScreen(pieceRow - i, pieceColumn + i)) {
+                    if (board.getCell(pieceRow - i, pieceColumn + i).getPieceOnSquare() == null) {
+                        neMoves.addMove();
+                        moves.add((pieceRow - i) + "," + (pieceColumn + i));
+                    } else if (isEnemy(board, pieceRow - i, pieceColumn + i)) {
+                        neMoves.addMove();
+                        moves.add((pieceRow - i) + "," + (pieceColumn + i));
+                        foundEnemy = true;
+                    }
                 }
-                else if ( isEnemy( board, pieceRow - i, pieceColumn + i ) ){
-                    neMoves.addMove();
-                    moves.add( ( pieceRow - i ) + "," + ( pieceColumn + i ) );
-                    break;
-                }
-                else
-                {
+                if (foundEnemy) {
                     break;
                 }
             }
@@ -342,24 +325,23 @@ public abstract class ChessGamePiece implements Serializable{
     protected ArrayList<String> calculateSouthWestMoves(
         ChessGameBoard board,
         int numMoves ){
-        ArrayList<String> moves = new ArrayList<String>();
+        ArrayList<String> moves = new ArrayList<>();
         Moves swMoves = new Moves();
         if ( isPieceOnScreen() ){
-            for ( int i = 1; i < 8 && swMoves.getCount() < numMoves; i++ ){
-                if ( isOnScreen( pieceRow + i, pieceColumn - i )
-                    && ( board.getCell( pieceRow + i,
-                        pieceColumn - i ).getPieceOnSquare() == null ) ){
+            boolean continueLoop = true;
+            for (int i = 1; i < 8 && swMoves.getCount() < numMoves && continueLoop; i++) {
+                if (isOnScreen(pieceRow + i, pieceColumn - i) &&
+                        (board.getCell(pieceRow + i, pieceColumn - i).getPieceOnSquare() == null)) {
                     swMoves.addMove();
-                    moves.add( ( pieceRow + i ) + "," + ( pieceColumn - i ) );
-                }
-                else if ( isEnemy( board, pieceRow + i, pieceColumn - i ) ){
+                    moves.add((pieceRow + i) + "," + (pieceColumn - i));
+                } else if (isEnemy(board, pieceRow + i, pieceColumn - i)) {
                     swMoves.addMove();
-                    moves.add( ( pieceRow + i ) + "," + ( pieceColumn - i ) );
-                    break;
-                }
-                else
-                {
-                    break;
+                    moves.add((pieceRow + i) + "," + (pieceColumn - i));
+                    if (swMoves.getCount() == numMoves) {
+                        continueLoop = false;
+                    }
+                } else if (swMoves.getCount() == numMoves) {
+                    continueLoop = false;
                 }
             }
         }
@@ -379,24 +361,17 @@ public abstract class ChessGamePiece implements Serializable{
     protected ArrayList<String> calculateSouthEastMoves(
         ChessGameBoard board,
         int numMoves ){
-        ArrayList<String> moves = new ArrayList<String>();
+        ArrayList<String> moves = new ArrayList<>();
         Moves seMoves = new Moves();
-        if ( isPieceOnScreen() ){
-            for ( int i = 1; i < 8 && seMoves.getCount() < numMoves; i++ ){
-                if ( isOnScreen( pieceRow + i, pieceColumn + i )
-                    && ( board.getCell( pieceRow + i,
-                        pieceColumn + i ).getPieceOnSquare() == null ) ){
+        if (isPieceOnScreen()) {
+            boolean foundValidMove = false;
+            for (int i = 1; i < 8 && seMoves.getCount() < numMoves && !foundValidMove; i++) {
+                if (isOnScreen(pieceRow + i, pieceColumn + i) &&
+                    (board.getCell(pieceRow + i, pieceColumn + i).getPieceOnSquare() == null) ||
+                    isEnemy(board, pieceRow + i, pieceColumn + i)) {
                     seMoves.addMove();
-                    moves.add( ( pieceRow + i ) + "," + ( pieceColumn + i ) );
-                }
-                else if ( isEnemy( board, pieceRow + i, pieceColumn + i ) ){
-                    seMoves.addMove();
-                    moves.add( ( pieceRow + i ) + "," + ( pieceColumn + i ) );
-                    break;
-                }
-                else
-                {
-                    break;
+                    moves.add((pieceRow + i) + "," + (pieceColumn + i));
+                    foundValidMove = true;
                 }
             }
         }
@@ -703,7 +678,7 @@ public abstract class ChessGamePiece implements Serializable{
      * @param board the game board to check on
      * @return ArrayList<GamePiece> the list of attackers
      */
-    public ArrayList<ChessGamePiece> getCurrentAttackers( ChessGameBoard board ){
+    public List<ChessGamePiece> getCurrentAttackers( ChessGameBoard board ){
         ArrayList<ChessGamePiece> attackers = new ArrayList<>();
         int enemyColor =
             ( this.getColorOfPiece() == ChessGamePiece.BLACK )

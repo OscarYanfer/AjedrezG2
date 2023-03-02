@@ -11,6 +11,7 @@ public class ChessGameLog extends JScrollPane {
         this.textArea = textArea;
     }
 
+    //Creación del método que fabricará las instancias
     public static ChessGameLog create() {
         JTextArea textArea = new JTextArea("", 5, 30);
         return new ChessGameLog(textArea);

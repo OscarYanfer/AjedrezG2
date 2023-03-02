@@ -26,7 +26,7 @@ public class ChessGraveyard
         this.add( new JLabel( title ) );
         this.setLayout( new GridLayout( 8, 0 ) );
     }
-
+    //Devuelve una única instancia de la clase
     public static ChessGraveyard getInstance(String title) {
         if (instance == null) {
             instance = new ChessGraveyard(title);
