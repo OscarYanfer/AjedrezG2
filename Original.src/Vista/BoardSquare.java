@@ -11,10 +11,10 @@ import javax.swing.JPanel;
  */
 public class BoardSquare
     extends JPanel{
-    private int row;
-    private int col;
+    private int            row;
+    private int            col;
     private transient ChessGamePiece piece;
-    private JLabel imageLabel;
+    private JLabel         imageLabel;
     // ----------------------------------------------------------
     /**
      * Create a new BoardSquare object.

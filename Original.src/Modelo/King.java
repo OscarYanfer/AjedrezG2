@@ -1,15 +1,7 @@
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
-// -------------------------------------------------------------------------
-/**
- * Represents a King game piece.
- *
- * @author Ben Katz (bakatz)
- * @author Myles David II (davidmm2)
- * @author Danielle Bushrow (dbushrow)
- * @version 2010.11.17
- */
-public class King
+
+public class King 
     extends ChessGamePiece{
     // ----------------------------------------------------------
     /**
@@ -37,6 +29,8 @@ public class King
      */
     @Override
     protected ArrayList<String> calculatePossibleMoves( ChessGameBoard board ){
+        // BEGIN IMPORTANT BLOCK
+        // This block of code is important and must be kept as is
         ArrayList<String> northEastMoves = calculateNorthEastMoves( board, 1 );
         ArrayList<String> northWestMoves = calculateNorthWestMoves( board, 1 );
         ArrayList<String> southEastMoves = calculateSouthEastMoves( board, 1 );
@@ -45,7 +39,7 @@ public class King
         ArrayList<String> southMoves = calculateSouthMoves( board, 1 );
         ArrayList<String> eastMoves = calculateEastMoves( board, 1 );
         ArrayList<String> westMoves = calculateWestMoves( board, 1 );
-        ArrayList<String> allMoves = new ArrayList<String>();
+        ArrayList<String> allMoves = new ArrayList<>();
         allMoves.addAll( northEastMoves );
         allMoves.addAll( northWestMoves );
         allMoves.addAll( southWestMoves );
@@ -55,6 +49,7 @@ public class King
         allMoves.addAll( westMoves );
         allMoves.addAll( eastMoves );
         return allMoves;
+        // END IMPORTANT BLOCK
     }
     /**
      * Determines if this King is checked.
@@ -87,7 +82,7 @@ public class King
         {
             return new ImageIcon(
                 getClass().getResource("chessImages/default-Unassigned.gif" )
-            );            
+            );         
         }
     }
 }

@@ -1,16 +1,5 @@
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
-// -------------------------------------------------------------------------
-/**
- * Represents a Pawn game piece. Unique in that it can move two locations on its
- * first turn and therefore requires a new 'notMoved' variable to keep track of
- * its turns.
- *
- * @author Ben Katz (bakatz)
- * @author Myles David II (davidmm2)
- * @author Danielle Bushrow (dbushrow)
- * @version 2010.11.17
- */
 public class Pawn
     extends ChessGamePiece{
     private boolean notMoved;
@@ -70,49 +59,44 @@ public class Pawn
      */
     @Override
     protected ArrayList<String> calculatePossibleMoves( ChessGameBoard board ){
-        ArrayList<String> moves = new ArrayList<String>();
+        ArrayList<String> moves = new ArrayList<>();
         if ( isPieceOnScreen() ){
-            int currRow =
-                getColorOfPiece() == ChessGamePiece.WHITE
-                    ? ( pieceRow - 1 )
-                    : ( pieceRow + 1 );
-            int count = 1;
+            int currRow = getColorOfPiece() == ChessGamePiece.WHITE ? ( pieceRow - 1 ) : ( pieceRow + 1 );
             int maxIter = notMoved ? 2 : 1;
-            // check for normal moves
-            while ( count <= maxIter ){ // only loop while we have open slots and have not passed our
-              // limit
-                if ( isOnScreen( currRow, pieceColumn )
-                    && board.getCell( currRow,
-                        pieceColumn ).getPieceOnSquare() == null ){
-                    moves.add( currRow + "," + pieceColumn );
-                }
-                else
-                {
-                    break;
-                }
-                currRow =
-                    ( getColorOfPiece() == ChessGamePiece.WHITE )
-                        ? ( currRow - 1 )
-                        : ( currRow + 1 );
-                count++;
+            moves.addAll(getNormalMoves(board, currRow, pieceColumn, maxIter));
+            moves.addAll(getCaptureMoves(board));
+        }
+        return moves;
+    }
+    
+    private ArrayList<String> getNormalMoves(ChessGameBoard board, int currRow, int pieceColumn, int maxIter) {
+        ArrayList<String> moves = new ArrayList<>();
+        int count = 1;
+        while ( count <= maxIter && isOnScreen(currRow, pieceColumn) && board.getCell(currRow, pieceColumn).getPieceOnSquare() == null ){
+            moves.add(currRow + "," + pieceColumn);
+            currRow = getColorOfPiece() == ChessGamePiece.WHITE ? ( currRow - 1 ) : ( currRow + 1 );
+            count++;
+        }
+        return moves;
+    }
+    
+    private ArrayList<String> getCaptureMoves(ChessGameBoard board) {
+        ArrayList<String> moves = new ArrayList<>();
+        if ( getColorOfPiece() == ChessGamePiece.WHITE ){
+            if ( isEnemy( board, pieceRow - 1, pieceColumn - 1 ) ){
+                moves.add( ( pieceRow - 1 ) + "," + ( pieceColumn - 1 ) );
             }
-            // check for enemy capture points
-            if ( getColorOfPiece() == ChessGamePiece.WHITE ){
-                if ( isEnemy( board, pieceRow - 1, pieceColumn - 1 ) ){
-                    moves.add( ( pieceRow - 1 ) + "," + ( pieceColumn - 1 ) );
-                }
-                if ( isEnemy( board, pieceRow - 1, pieceColumn + 1 ) ){
-                    moves.add( ( pieceRow - 1 ) + "," + ( pieceColumn + 1 ) );
-                }
+            if ( isEnemy( board, pieceRow - 1, pieceColumn + 1 ) ){
+                moves.add( ( pieceRow - 1 ) + "," + ( pieceColumn + 1 ) );
             }
-            else
-            {
-                if ( isEnemy( board, pieceRow + 1, pieceColumn - 1 ) ){
-                    moves.add( ( pieceRow + 1 ) + "," + ( pieceColumn - 1 ) );
-                }
-                if ( isEnemy( board, pieceRow + 1, pieceColumn + 1 ) ){
-                    moves.add( ( pieceRow + 1 ) + "," + ( pieceColumn + 1 ) );
-                }
+        }
+        else
+        {
+            if ( isEnemy( board, pieceRow + 1, pieceColumn - 1 ) ){
+                moves.add( ( pieceRow + 1 ) + "," + ( pieceColumn - 1 ) );
+            }
+            if ( isEnemy( board, pieceRow + 1, pieceColumn + 1 ) ){
+                moves.add( ( pieceRow + 1 ) + "," + ( pieceColumn + 1 ) );
             }
         }
         return moves;
