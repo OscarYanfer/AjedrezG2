@@ -32,10 +32,7 @@ public class ChessGraveyard
      *            the GamePiece to add
      */
     public void addPiece( ChessGamePiece piece ){
-        piece.setPieceLocation( -1, -1 );
-        JLabel pieceLabel = new JLabel();
-        pieceLabel.setIcon( piece.getImage() );
-        this.add( pieceLabel );
+        piece.addPiece(this);
     }
     // ----------------------------------------------------------
     /**
