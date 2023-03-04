@@ -17,12 +17,34 @@ import java.awt.GridLayout;
 public class ChessGameBoard extends JPanel{
     private BoardSquare[][] chessCells;
     private BoardListener   listener;
+    
+    // SINGLETON
+    //instancia = nulo;
+    private static ChessGameBoard instance = null;
+    
+    //CONSTRUCTOR PRIVADO PARA EVITAR INSTANCIAS
+    private  ChessGameBoard() {
+        
+        this.setLayout(new GridLayout(8, 8, 1, 1));
+        listener = new BoardListener();
+        chessCells = new BoardSquare[8][8];
+        initializeBoard();
+    }
+    
+    public static ChessGameBoard getInstance() {
+        if (instance == null) {
+            instance = new ChessGameBoard();
+        }
+        return instance;
+    }
     // ----------------------------------------------------------
     /**
      * Returns the entire board.
      *
      * @return BoardSquare[][] the chess board
      */
+    
+    
     public BoardSquare[][] getCells(){
         return chessCells;
     }
@@ -159,44 +181,40 @@ public class ChessGameBoard extends JPanel{
         resetBoard( false );
         for ( int i = 0; i < chessCells.length; i++ ){
             for ( int j = 0; j < chessCells[0].length; j++ ){
-//                 ChessGamePiece pieceToAdd;
-//                 if ( i == 1 ) // black pawns
-//                 {
-//                     pieceToAdd = new Pawn( this, i, j, ChessGamePiece.BLACK );
-//                 }
-//                 else if ( i == 6 ) // white pawns
-//                 {
-//                     pieceToAdd = new Pawn( this, i, j, ChessGamePiece.WHITE );
-//                 }
-//                 else if ( i == 0 || i == 7 ) // main rows
-//                 {
-//                     int colNum =
-//                         i == 0 ? ChessGamePiece.BLACK : ChessGamePiece.WHITE;
-//                     if ( j == 0 || j == 7 ){
-//                         pieceToAdd = new Rook( this, i, j, colNum );
-//                     }
-//                     else if ( j == 1 || j == 6 ){
-//                         pieceToAdd = new Knight( this, i, j, colNum );
-//                     }
-//                     else if ( j == 2 || j == 5 ){
-//                         pieceToAdd = new Bishop( this, i, j, colNum );
-//                     }
-//                     else if ( j == 3 ){
-//                         pieceToAdd = new King( this, i, j, colNum );
-//                     }
-//                     else
-//                     {
-//                         pieceToAdd = new Queen( this, i, j, colNum );
-//                     }
-//                 }
-//                 else
-//                 {
-//                     pieceToAdd = null;
-//                 }
-                
-                
-                ChessGamePiece pieceToAdd = getChessGamePiece(i, j);
-                
+                ChessGamePiece pieceToAdd;
+                if ( i == 1 ) // black pawns
+                {
+                    pieceToAdd = new Pawn( this, i, j, ChessGamePiece.BLACK );
+                }
+                else if ( i == 6 ) // white pawns
+                {
+                    pieceToAdd = new Pawn( this, i, j, ChessGamePiece.WHITE );
+                }
+                else if ( i == 0 || i == 7 ) // main rows
+                {
+                    int colNum =
+                        i == 0 ? ChessGamePiece.BLACK : ChessGamePiece.WHITE;
+                    if ( j == 0 || j == 7 ){
+                        pieceToAdd = new Rook( this, i, j, colNum );
+                    }
+                    else if ( j == 1 || j == 6 ){
+                        pieceToAdd = new Knight( this, i, j, colNum );
+                    }
+                    else if ( j == 2 || j == 5 ){
+                        pieceToAdd = new Bishop( this, i, j, colNum );
+                    }
+                    else if ( j == 3 ){
+                        pieceToAdd = new King( this, i, j, colNum );
+                    }
+                    else
+                    {
+                        pieceToAdd = new Queen( this, i, j, colNum );
+                    }
+                }
+                else
+                {
+                    pieceToAdd = null;
+                }
                 chessCells[i][j] = new BoardSquare( i, j, pieceToAdd );
                 if ( ( i + j ) % 2 == 0 ){
                     chessCells[i][j].setBackground( Color.WHITE );
@@ -210,59 +228,10 @@ public class ChessGameBoard extends JPanel{
             }
         }
     }
-    
-    //SINGLETON
-    
-    public abstract class ChessGamePiece {
-   // Añadir un campo estático privado para almacenar la instancia de la pieza
-    private static ChessGamePiece[][] instances = new ChessGamePiece[8][8];
-
-    // Add a private constructor to prevent creating new instances of the piece
-    private ChessGamePiece() {}
-
-    // Agregue un constructor privado para evitar la creación de nuevas instancias de la pieza
-    public static ChessGamePiece getInstance(int i, int j) {
-        if (instances[i][j] == null) {
-            if (i == 1) // peones negros
-            {
-                instances[i][j] = new Pawn(i, j, ChessGamePiece.BLACK);
-            } else if (i == 6) // peones blancos
-            {
-                instances[i][j] = new Pawn(i, j, ChessGamePiece.WHITE);
-            } else if (i == 0 || i == 7) // filas principales
-            {
-                int colNum =
-                        i == 0 ? ChessGamePiece.BLACK : ChessGamePiece.WHITE;
-                if (j == 0 || j == 7) {
-                    instances[i][j] = new Rook(i, j, colNum);
-                } else if (j == 1 || j == 6) {
-                    instances[i][j] = new Knight(i, j, colNum);
-                } else if (j == 2 || j == 5) {
-                    instances[i][j] = new Bishop(i, j, colNum);
-                } else if (j == 3) {
-                    instances[i][j] = new King(i, j, colNum);
-                } else {
-                    instances[i][j] = new Queen(i, j, colNum);
-                }
-            }
-        }
-        return instances[i][j];
-    }
-}
-    
-    private ChessGamePiece getChessGamePiece(int i, int j) {
-        ChessGamePiece pieceToAdd = ChessGamePiece.getInstance(i, j);
-        return pieceToAdd;
-}
-    
-    
-    
     // ----------------------------------------------------------
     /**
      * Clears the colors on the board.
      */
-    
-    
     public void clearColorsOnBoard(){
         for ( int i = 0; i < chessCells.length; i++ ){
             for ( int j = 0; j < chessCells[0].length; j++ ){
